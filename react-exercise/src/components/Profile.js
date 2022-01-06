@@ -35,19 +35,27 @@ const Profile = () => {
 
     useEffect(() => {
         if(currentUser){
-            console.log(currentUser.uid)
             foo()
         }
     }, [currentUser])
 
     const foo = async() => {
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef)
-        const data = docSnap.data();
-        console.log(data)
-        if(data.image !== ""){
-            setPhotoURL(data.image)
+        try {
+            console.log(currentUser.uid)
+            const uid = currentUser.uid;
+            const response = await fetch(`http://localhost:5000/info/${uid}`);
+            const data = await response.json();
+            if(data.image !== ""){
+               setPhotoURL(data.image)
+            }
+        } catch (error) {
+            console.log(error)
         }
+        // const docRef = doc(db, "users", currentUser.uid);
+        // const docSnap = await getDoc(docRef)
+        // const data = docSnap.data();
+        // console.log(data)
+        // 
         
     }
 

@@ -26,14 +26,35 @@ const SignUp = () => {
             await createUserWithEmailAndPassword(auth, registerEmail, registerPassword)
             .then(async function () {
                 const userUid = auth.currentUser.uid
-                const playerRef = doc(db, 'users', userUid)                
-                setDoc(playerRef, {
-                  player1: "none",
-                  player2: "none",
-                  player3: "none",
-                  player4: "none",
-                  image: ''
-                })  
+
+                try {
+                    const body = { 
+                        uid: userUid,
+                        player1: "none",
+                        player2: "none",
+                        player3: "none",
+                        player4: "none",
+                        image: '' 
+                    };
+                    
+                    const response = fetch("http://localhost:5000/info", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });
+                    console.log(response)
+                } catch (error) {
+                    console.log(error)
+                }
+                
+                // const playerRef = doc(db, 'users', userUid)                
+                // setDoc(playerRef, {
+                //   player1: "none",
+                //   player2: "none",
+                //   player3: "none",
+                //   player4: "none",
+                //   image: ''
+                // })  
               }).then(() => {
                 history("/profile")
 

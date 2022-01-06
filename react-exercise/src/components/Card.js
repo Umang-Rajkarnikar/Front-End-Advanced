@@ -7,31 +7,28 @@ import { auth, db } from "../firebase-config.js"
 import { doc, updateDoc } from "firebase/firestore";
 
 const Card = ({ colors, onItems, player, onCardColor, pID }) => {
-  console.log(player.color)
 
   var [selected, setSelected] = useState();
   function handleChange(event) {
-    storeColor(event.target.value.toLowerCase())
     setSelected(event.target.value)
     onItems(event.target.value, player.pID)
     onCardColor(event.target.value, player.pID)
+    storeColor(event.target.value.toLowerCase())
+
   }
 
   async function storeColor(color) {
-    const player = doc(db, 'users', auth.currentUser.uid);
-    if(pID === '1'){
-      await updateDoc(player, { "player1": color})
+    const body = { 
+      item: color,
+      playerNum: pID,
+      isImage: false
     }
-    else if(pID === '2'){
-      await updateDoc(player, { "player2": color})
-
-    }
-    else if(pID === '3'){
-      await updateDoc(player, { "player3": color})
-    }
-    else if(pID === '4'){
-      await updateDoc(player, { "player4": color})
-    }
+    await fetch(`http://localhost:5000/info/${auth.currentUser.uid}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    console.log("das")
   }
 
   return (

@@ -45,8 +45,29 @@ const firebaseConfig = {
     const snapshot = await uploadBytes(fileRef, file)
     const photoURL = await getDownloadURL(fileRef)
 
-    const player = doc(db, 'users', currentUser.uid)
-    await updateDoc(player, { "image": photoURL })
+
+
+    try {
+      const body = { 
+        item: photoURL,
+        playerNum: 0,
+        isImage: true
+      }
+
+      const response = await fetch(`http://localhost:5000/info/${currentUser.uid}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+
+
+    // const player = doc(db, 'users', currentUser.uid)
+    // await updateDoc(player, { "image": photoURL })
     
     setLoading(false)
     
