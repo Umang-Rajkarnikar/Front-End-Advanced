@@ -73,6 +73,7 @@ const Lobby = () => {
       let isActive = true;
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user && isActive){
+          console.log("fhulag")
           setLoading(false)
           fetchData(user.uid)
         } else{
@@ -86,7 +87,6 @@ const Lobby = () => {
     }, [])
 
     useEffect(() => {
-      console.log(playerID)
       const color_Array = []
       for (const color of colors){        
         color_Array.push(color)
@@ -101,7 +101,6 @@ const Lobby = () => {
         }
       }
 
-      console.log(color_Array)
 
       setColors(color_Array)
       setLoading(true)
@@ -110,18 +109,17 @@ const Lobby = () => {
 
     const fetchData = async (uid) =>{
       if(uid!=undefined){
-        const functions = getFunctions();
-        const getPlayerData = httpsCallable(functions, 'getPlayerData');
-        getPlayerData({ id: uid })
-          .then((result) => {
-            const playerData = {
-              player1: result.data._fieldsProto.player1.stringValue,
-              player2: result.data._fieldsProto.player2.stringValue,
-              player3: result.data._fieldsProto.player3.stringValue,
-              player4: result.data._fieldsProto.player4.stringValue
-            }
-            setUpdatedItems(playerData)
-          })
+        const response = await fetch(`http://localhost:5000/info/${uid}`);
+        const data = await response.json();
+        
+        const playerData = {
+          player1: data.player1,
+          player2: data.player2,
+          player3: data.player3,
+          player4: data.player4
+        }
+        setUpdatedItems(playerData)
+
       }
     }
 
